@@ -51,3 +51,8 @@ def validateUserData(data, keys):
             result["missing_key"] = key_no_value
 
     return result
+
+
+def tryToLoginUser(login, pwd):
+    return db.session.query(User).filter(User.login == login).filter(
+        User.pwd == pwd).all()
