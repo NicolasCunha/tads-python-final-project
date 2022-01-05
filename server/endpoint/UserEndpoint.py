@@ -1,6 +1,5 @@
-from Config import app, db
+from Config import app
 from flask import request
-from model.User import User
 from utils import HttpUtils
 from service import UserService
 from messages import UserMessages
@@ -19,8 +18,7 @@ def login():
         response["login_ok"] = False
         return HttpUtils.createErrorResponse(response)
 
-    user = db.session.query(User).filter(User.login == request_data["login"]).filter(
-        User.pwd == request_data["pwd"]).all()
+    user = UserService.tryToLoginUser(request_data["login"], request_data["pwd"])
 
     response["login_ok"] = True if user else False
 
