@@ -1,1 +1,1 @@
-__all__ = ['UserEndpoint']
+__all__ = ['UserEndpoint', 'StockEndpoint']
