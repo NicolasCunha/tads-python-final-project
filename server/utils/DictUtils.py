@@ -2,7 +2,7 @@ from utils import StringUtils
 
 
 def keyHasValue(dict_ref, key):
-    return key in dict_ref and not StringUtils.isStringEmpty(dict_ref[key])
+    return key in dict_ref and dict_ref[key]
 
 
 def keyHasValues(dict_ref, *keys):
