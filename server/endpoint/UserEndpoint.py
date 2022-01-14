@@ -21,6 +21,8 @@ def login():
     user = UserService.tryToLoginUser(request_data["login"], request_data["pwd"])
 
     response["login_ok"] = True if user else False
+    if user:
+        response["user"] = [u.to_json() for u in user]
 
     return HttpUtils.createResponse(response)
 

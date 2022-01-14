@@ -14,5 +14,6 @@ class User(db.Model):
             'id': self.id,
             'login': self.login,
             'pwd': self.pwd,
-            'email': self.email
+            'email': self.email,
+            'name': self.person_name
         }

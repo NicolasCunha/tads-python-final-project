@@ -21,6 +21,8 @@
     <script src="js/tabVisibility.js"></script>
     <!--Logic-->
     <script src="js/login.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/redirectIfLoggedIn.js"></script>
 </head>
 
 <body>
@@ -42,21 +44,6 @@
                         <li class="nav-item" id="itemRegister">
                             <a class="nav-link" href="#">Registrar</a>
                         </li>
-                        <li class="nav-item" id="itemLogout">
-                            <a class="nav-link" href="#">Logout</a>
-                        </li>
-                        <li class="nav-item" id="itemStocks">
-                            <a class="nav-link" href="#">Minhas Ações</a>
-                        </li>
-                        <li class="nav-item dropdown" id="itemRecords">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Cadastros
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#">Motores de Busca</a></li>
-                            </ul>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -64,7 +51,7 @@
         <div id="loginFailAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
             Usuário ou senha inválidos!
             <button id="closeAlertBtn" type="button" class="btn-close" data-bs-dismiss="alert"
-                aria-label="Close"></button>
+                aria-label="Fechar"></button>
         </div>
         <div id="loaderModal" class="modal" tabindex="-1">
             <div class="modal-dialog">

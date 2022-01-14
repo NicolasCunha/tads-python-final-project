@@ -17,3 +17,7 @@ function sessionGet(id) {
     }
     return dataParsed;
 };
+
+function sessionRemove(id) {
+    sessionStorage.removeItem(id);
+}

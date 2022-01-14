@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Controle de Ações</title>
+    <title>Controle de Ações - Minhas Ações</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='css/common.css'>
     <!--Bootstrap-->
@@ -20,13 +20,14 @@
     <!--Tab Visibility-->
     <script src="js/tabVisibility.js"></script>
     <!--Logic-->
+    <script src="js/login.js"></script>
     <script src="js/logout.js"></script>
-    <script src="js/index.js"></script>
+    <script src="js/redirectIfNotLoggedIn.js"></script>
 </head>
 
 <body>
     <div class="centeredDivs">
-        <h1>Controle de Ações - Menu</h1>
+        <h1>Controle de Ações - Minhas Ações</h1>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -36,12 +37,6 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item" id="itemLogin">
-                            <a class="nav-link" href="login.html">Login</a>
-                        </li>
-                        <li class="nav-item" id="itemRegister">
-                            <a class="nav-link" href="#">Registrar</a>
-                        </li>
                         <li class="nav-item" id="itemLogout">
                             <a class="nav-link" href="#" onclick="logoutUser()">Logout</a>
                         </li>
@@ -52,18 +47,7 @@
                 </div>
             </div>
         </nav>
-        <div id="content">
-            <div id="necessaryLoginAlert" class="alert alert-warning alert-dismissible fade show" role="alert">
-                Você deve estar autenticado no sistema para efetuar essa ação.
-                <button id="closeAlertBtn" type="button" class="btn-close" data-bs-dismiss="alert"
-                    aria-label="Fechar"></button>
-            </div>
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container">
-                    <h1 class="display-4">Bem-vindo ao sistema de controle de ações!</h1>
-                    <p class="lead">Selecione uma das opções acima para continuar.</p>
-                </div>
-            </div>
-        </div>
     </div>
 </body>
+
+</html>
