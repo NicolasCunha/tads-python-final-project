@@ -37,6 +37,7 @@ def signup():
     if not result["status"]:
         response["msg"] = UserMessages.VALUE_NOT_FOUND_OR_EMPTY.format(key=result["missing_key"])
         response["signup_ok"] = False
+        response["status_code"] = 1
         return HttpUtils.createErrorResponse(response)
 
     # check if user already exists
@@ -45,6 +46,7 @@ def signup():
     if result["status"]:
         response["msg"] = UserMessages.USER_EXISTS.format(user=request_data["login"], email=request_data["email"])
         response["signup_ok"] = False
+        response["status_code"] = 2
         return HttpUtils.createErrorResponse(response)
 
     # try to create user in database

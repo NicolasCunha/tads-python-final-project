@@ -42,9 +42,10 @@ def getStocks():
 def getStockById(stock_id):
     stock = StockService.findStockById(stock_id)
 
-    stock_dict = [it.to_json() for it in stock]
+    if stock:
+        stock = stock.to_json()
 
-    return HttpUtils.createResponse(stock_dict)
+    return HttpUtils.createResponse({'stock': stock})
 
 
 @app.route('/stock/getUserStocks/<int:user_id>', methods=['get'])
@@ -54,8 +55,10 @@ def getUserStocks(user_id):
     stock_dict = [it.to_json() for it in stocks]
     stock_list = []
     for stock in stock_dict:
-        stock_list.extend(StockService.findStockById(stock["id_stock"]))
-    response = {"stocks": [stock.to_json() for stock in stock_list]}
+        stock_by_id = StockService.findStockById(stock["id_stock"]).to_json()
+        stock_by_id["qty"] = stock["qty"]
+        stock_list.append(stock_by_id)
+    response = {"stocks": stock_list}
     return HttpUtils.createResponse(response)
 
 
@@ -63,9 +66,7 @@ def getUserStocks(user_id):
 def getStockByCode(stock_code):
     stock = StockService.findStockByCode(stock_code)
 
-    stock_dict = [it.to_json() for it in stock]
-
-    return HttpUtils.createResponse(stock_dict)
+    return HttpUtils.createResponse(stock)
 
 
 @app.route('/stock/addStockToUser', methods=['post'])

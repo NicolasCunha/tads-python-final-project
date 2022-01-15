@@ -23,6 +23,7 @@
     <script src="js/login.js"></script>
     <script src="js/logout.js"></script>
     <script src="js/redirectIfNotLoggedIn.js"></script>
+    <script src="js/stocks.js"></script>
 </head>
 
 <body>
@@ -47,6 +48,34 @@
                 </div>
             </div>
         </nav>
+        <div id="content">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 id="userHello" class="display-6">Olá, %@USUARIO%@!</h1>
+                    <p class="lead">Abaixo estão as suas ações.</p>
+                </div>
+            </div>
+            <div id="stocksDiv">
+                <div id="emptyStocksAlert" class="alert alert-primary alert-dismissible fade show" role="alert">
+                    Você não possui ações.
+                    <button id="closeAlertBtn" type="button" class="btn-close" data-bs-dismiss="alert"
+                        aria-label="Fechar"></button>
+                </div>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Código</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Valor</th>
+                        <th scope="col">Quantidade</th>
+                      </tr>
+                    </thead>
+                    <tbody id="stocksTable">                      
+                    </tbody>
+                  </table>
+            </div>
+        </div>
     </div>
 </body>
 

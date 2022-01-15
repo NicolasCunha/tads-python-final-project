@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Controle de Ações - Login</title>
+    <title>Controle de Ações - Registrar</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='css/common.css'>
     <!--Bootstrap-->
@@ -20,15 +20,14 @@
     <!--Tab Visibility-->
     <script src="js/tabVisibility.js"></script>
     <!--Logic-->
-    <script src="js/login.js"></script>
     <script src="js/logout.js"></script>
     <script src="js/redirectIfLoggedIn.js"></script>
+    <script src="js/registrar.js"></script>
 </head>
 
 <body>
-
     <div class="centeredDivs">
-        <h1>Controle de Ações - Login</h1>
+        <h1>Controle de Ações - Registrar</h1>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -48,10 +47,6 @@
                 </div>
             </div>
         </nav>
-        <div id="loginFailAlert" class="alert alert-danger alert-dismissible fade show collapse" role="alert">
-            Usuário ou senha inválidos!
-            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
-        </div>
         <div id="loaderModal" class="modal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -69,7 +64,22 @@
                 </div>
             </div>
         </div>
-        <form id="formLogin">
+        <div id="userExistsAlert" class="alert alert-warning alert-dismissible fade show" role="alert">
+            Já existe um cadastro com esse nome de usuário ou e-mail no sistema.
+            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+        </div>
+        <div id="fieldPwdNotMatchAlert" class="alert alert-warning alert-dismissible fade show" role="alert">
+            As senhas não coincidem.
+            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+        </div>
+        <div id="fieldInvalidAlert" class="alert alert-warning alert-dismissible fade show" role="alert">
+            Um ou mais campos estão inválidos.
+            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+        </div>
+        <div id="signupOkAlert" class="alert alert-success" role="alert">
+            Cadastro feito com sucesso! Clique <a href="login.html" class="alert-link">aqui</a> para efetuar seu login.
+        </div>
+        <form id="formSignup">
             <div class="form-group">
                 <label for="username">Nome de usuário</label>
                 <input type="text" class="form-control" id="username" aria-describedby="usernameHelp"
@@ -82,7 +92,25 @@
                     aria-describedby="passwordHelp">
                 <small id="passwordHelp" class="form-text text-muted">Informe a senha da sua conta.</small>
             </div>
-            <button id="btnLogin" class="btn btn-primary">Login</button>
+            <div class="form-group">
+                <label for="passwordConfirm">Confirmar Senha</label>
+                <input type="password" class="form-control" id="passwordConfirm" placeholder="senha.forte"
+                    aria-describedby="passwordHelp">
+                <small id="passwordHelp" class="form-text text-muted">Informe a senha da sua conta.</small>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="maria@yahoo.com"
+                    aria-describedby="passwordHelp">
+                <small id="emailHelp" class="form-text text-muted">Informe seu e-mail.</small>
+            </div>
+            <div class="form-group">
+                <label for="fullname">Nome completo</label>
+                <input type="text" class="form-control" id="fullname" aria-describedby="fullnameHelp"
+                    placeholder="João Fagundes">
+                <small id="fullnameHelp" class="form-text text-muted">Informe o seu nome completo.</small>
+            </div>
+            <button id="btnSignup" class="btn btn-primary">Registrar</button>
         </form>
     </div>
 </body>

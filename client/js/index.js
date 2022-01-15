@@ -1,7 +1,7 @@
 $(document).ready(() => {
-    $('.alert').hide();
+    $('#necessaryLoginAlert').hide();
     if (sessionGet('showNecessaryLoginMsg')) {
-        $('.alert').show();
+        $('#necessaryLoginAlert').show();
         sessionRemove('showNecessaryLoginMsg');
     }
 });

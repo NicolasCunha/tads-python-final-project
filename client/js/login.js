@@ -1,11 +1,11 @@
 function handleSucccessRequest(result, modal) {
-    $('.alert').hide();
     if (result[0].login_ok) {
         const user = result[0].user[0];
+        user.pwd = null;
         sessionSet('userLogin', user);
         window.location.href = 'index.html';
     } else {
-        $('.alert').show();
+        $('#loginFailAlert').show();
     }
     modal.hide();
 }
@@ -37,14 +37,18 @@ function login() {
 }
 
 $(document).ready(() => {
-    $('.alert').hide();
+    $('#loginFailAlert').hide();
     $('#formLogin').submit(e => {
         e.preventDefault();
     });
 
-    $('#loginBtn').click(event => {
+    $('#btnLogin').click(event => {
         login();
     });
 
+});
+
+$(document).on('click', '.btn-close', e => {
+    $(e.currentTarget.parentElement).hide();
 });
 

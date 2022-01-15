@@ -5,7 +5,7 @@ from utils import DictUtils
 
 
 def findStockById(stockId):
-    return db.session.query(Stock).filter(Stock.id == stockId).all()
+    return db.session.query(Stock).filter(Stock.id == stockId).first()
 
 
 def findStockByCode(code):

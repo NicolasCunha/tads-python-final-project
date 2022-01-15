@@ -13,5 +13,5 @@ class Stock(db.Model):
             'id': self.id,
             'name': self.name,
             'code': self.code,
-            'price' : self.price
+            'price': self.price
         }
