@@ -92,3 +92,18 @@ def findStocksYahooApi():
     result = YahooApiService.autocomplete(request_data["query"])
 
     return HttpUtils.createResponse(result)
+
+
+@app.route('/stock/updateUserStock', methods=['post'])
+def updateUserStock():
+    request_data = request.get_json()
+
+    return HttpUtils.createResponse(
+        StockService.updateUserStock(request_data["user"], request_data["stock"], request_data["qty"]))
+
+
+@app.route('/stock/deleteUserStock', methods=['post'])
+def deleteUserStock():
+    request_data = request.get_json()
+
+    return HttpUtils.createResponse(StockService.deleteUserStock(request_data["user"], request_data["stock"]))

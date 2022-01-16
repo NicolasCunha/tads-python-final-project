@@ -63,10 +63,44 @@ def getUserStocks(user):
 def addStockToUser(userId, stockId, qty):
     result = {"status": False}
     try:
-        user_stock = UserStock(id_user=userId, id_stock=stockId, qty=qty)
-        db.session.add(user_stock)
+
+        user_stock = db.session.query(UserStock).filter(UserStock.id_user == userId).filter(
+            UserStock.id_stock == stockId).first()
+
+        if user_stock:
+            user_stock.qty += qty
+        else:
+            user_stock = UserStock(id_user=userId, id_stock=stockId, qty=qty)
+            db.session.add(user_stock)
         db.session.commit()
+
         result["status"] = True
+    except Exception as ex:
+        result["error"] = str(ex)
+
+    return result
+
+
+def updateUserStock(userId, stockId, qty):
+    result = {"status": False}
+    try:
+        stock = db.session.query(UserStock).filter(UserStock.id_user == userId).filter(
+            UserStock.id_stock == stockId).first()
+        stock.qty = qty
+        db.session.commit()
+    except Exception as ex:
+        result["error"] = str(ex)
+
+    return result
+
+
+def deleteUserStock(userId, stockId):
+    result = {"status": False}
+    try:
+        stock = db.session.query(UserStock).filter(UserStock.id_user == userId).filter(
+            UserStock.id_stock == stockId).first()
+        db.session.delete(stock)
+        db.session.commit()
     except Exception as ex:
         result["error"] = str(ex)
 

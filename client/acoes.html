@@ -44,10 +44,74 @@
                         <li class="nav-item" id="itemStocks">
                             <a class="nav-link" href="acoes.html">Minhas Ações</a>
                         </li>
+                        <li class="nav-item" id="itemStocksRecords">
+                            <a class="nav-link" href="acoes_cadastro.html">Cadastro de Ações</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
+        <div id="loaderModal" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Carregando...</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="editModal" class="modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar Ação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="priceQtyInvalidAlert" class="alert alert-warning alert-dismissible fade show"
+                            role="alert">
+                            O valor do preço e quantidade da ação deve ser positivo.
+                            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+                        </div>
+                        <form id="formEditStock">
+                            <div class="form-group">
+                                <label for="stockId">ID</label>
+                                <input type="text" class="form-control" id="stockId" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="stockCode">Código</label>
+                                <input type="text" class="form-control" id="stockCode" placeholder="ITAUSA3" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="stockName">Nome</label>
+                                <input type="text" class="form-control" id="stockName" placeholder="Itau Banco SA"
+                                    readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="stockValue">Preço</label>
+                                <input type="number" class="form-control" id="stockValue" placeholder="100.00" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="stockQty">Quantidade/label>
+                                    <input type="number" class="form-control" id="stockQty" placeholder="50">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" onclick="doEditStock()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="content">
             <div class="jumbotron jumbotron-fluid">
                 <div class="container">
@@ -58,22 +122,21 @@
             <div id="stocksDiv">
                 <div id="emptyStocksAlert" class="alert alert-primary alert-dismissible fade show" role="alert">
                     Você não possui ações.
-                    <button id="closeAlertBtn" type="button" class="btn-close" data-bs-dismiss="alert"
-                        aria-label="Fechar"></button>
+                    <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
                 </div>
                 <table class="table">
                     <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Código</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Valor</th>
-                        <th scope="col">Quantidade</th>
-                      </tr>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Código</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Valor</th>
+                            <th scope="col">Quantidade</th>
+                        </tr>
                     </thead>
-                    <tbody id="stocksTable">                      
+                    <tbody id="stocksTable">
                     </tbody>
-                  </table>
+                </table>
             </div>
         </div>
     </div>
