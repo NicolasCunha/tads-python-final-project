@@ -88,6 +88,7 @@ def updateUserStock(userId, stockId, qty):
             UserStock.id_stock == stockId).first()
         stock.qty = qty
         db.session.commit()
+        result["status"] = True
     except Exception as ex:
         result["error"] = str(ex)
 
@@ -101,6 +102,37 @@ def deleteUserStock(userId, stockId):
             UserStock.id_stock == stockId).first()
         db.session.delete(stock)
         db.session.commit()
+        result["status"] = True
+    except Exception as ex:
+        result["error"] = str(ex)
+
+    return result
+
+
+def updateStock(stock_id, code, name, price):
+    result = {"status": False}
+    try:
+        stock = db.session.query(Stock).filter(Stock.id == stock_id).first()
+        if stock:
+            stock.code = code
+            stock.name = name
+            stock.price = price
+
+        db.session.commit()
+        result["status"] = True
+    except Exception as ex:
+        result["error"] = str(ex)
+
+    return result
+
+
+def deleteStock(stock_id):
+    result = {"status": False}
+    try:
+        stock = db.session.query(Stock).filter(Stock.id == stock_id).first()
+        db.session.delete(stock)
+        db.session.commit()
+        result["status"] = True
     except Exception as ex:
         result["error"] = str(ex)
 

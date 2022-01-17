@@ -23,6 +23,7 @@
     <script src="js/login.js"></script>
     <script src="js/logout.js"></script>
     <script src="js/redirectIfNotLoggedIn.js"></script>
+    <script src="js/stock_crud.js"></script>
 </head>
 
 <body>
@@ -56,8 +57,151 @@
                 </div>
             </div>
         </nav>
+        <div id="loaderModal" class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Carregando...</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-center">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="editModal" class="modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar Ação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="codeNotEmptyAlert" class="alert alert-warning alert-dismissible fade show"
+                            role="alert">
+                            O código da ação não pode ser vazio.
+                            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+                        </div>
+                        <div id="nameNotEmptyAlert" class="alert alert-warning alert-dismissible fade show"
+                            role="alert">
+                            O nome da ação não pode ser vazio.
+                            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+                        </div>
+                        <div id="priceInvalidAlert" class="alert alert-warning alert-dismissible fade show"
+                            role="alert">
+                            O preço da ação não pode ser vazio ou negativo.
+                            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+                        </div>
+                        <form id="formEditStock">
+                            <div class="form-group">
+                                <label for="stockId">ID</label>
+                                <input type="text" class="form-control" id="stockId" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="stockCode">Código</label>
+                                <input type="text" class="form-control" id="stockCode" placeholder="ITAUSA3">
+                            </div>
+                            <div class="form-group">
+                                <label for="stockName">Nome</label>
+                                <input type="text" class="form-control" id="stockName" placeholder="Itau Banco SA">
+                            </div>
+                            <div class="form-group">
+                                <label for="stockValue">Preço</label>
+                                <input type="number" class="form-control" id="stockValue" placeholder="100.00">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" onclick="doEditStock()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="newStockModal" class="modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nova Ação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="newStockCodeNotEmptyAlert" class="alert alert-warning alert-dismissible fade show"
+                            role="alert">
+                            O código da ação não pode ser vazio.
+                            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+                        </div>
+                        <div id="newStockNameNotEmptyAlert" class="alert alert-warning alert-dismissible fade show"
+                            role="alert">
+                            O nome da ação não pode ser vazio.
+                            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+                        </div>
+                        <div id="newStockPriceInvalidAlert" class="alert alert-warning alert-dismissible fade show"
+                            role="alert">
+                            O preço da ação não pode ser vazio ou negativo.
+                            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+                        </div>
+                        <div id="newStockAutocompleteTooShortAlert" class="alert alert-warning alert-dismissible fade show"
+                            role="alert">
+                            O valor de busca para ação é muito curto. Insira no mínimo 3 caracteres.
+                            Ex: 'Bra', 'Itau', 'Coteminas'
+                            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+                        </div>
+                        <form id="formNewStock">
+                            <label for="stockSearchDatalist">Busca de ações</label>
+                            <input class="form-control" list="newStockListOptions" id="stockSearchDatalist"
+                                placeholder="Digite o nome da ação e pressione 'Enter'.">
+                            <datalist id="newStockListOptions"></datalist>
+                            <div class="form-group">
+                                <label for="newStockCode">Código</label>
+                                <input type="text" class="form-control" id="newStockCode" placeholder="ITAUSA3">
+                            </div>
+                            <div class="form-group">
+                                <label for="newStockName">Nome</label>
+                                <input type="text" class="form-control" id="newStockName" placeholder="Itau Banco SA">
+                            </div>
+                            <div class="form-group">
+                                <label for="newStockValue">Preço</label>
+                                <input type="number" class="form-control" id="newStockValue" placeholder="100.00">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" onclick="doCreateStock()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="content">
-
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 id="userHello" class="display-6">Olá, %@USUARIO%@!</h1>
+                    <p class="lead">Abaixo estão as suas ações.</p>
+                </div>
+            </div>
+            <div id="emptyStocksAlert" class="alert alert-primary alert-dismissible fade show" role="alert">
+                Não existem ações cadastradas no sistema. Para cadastrar uma nova ação, clique no botão "Nova Ação".
+                <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="createStock()">Nova Ação</button>
+            <table id="stocksTableParent" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Código</th>
+                        <th scope="col">Nome</th>
+                        <th scope="col">Valor</th>
+                    </tr>
+                </thead>
+                <tbody id="stocksTable">
+                </tbody>
+            </table>
         </div>
     </div>
 </body>

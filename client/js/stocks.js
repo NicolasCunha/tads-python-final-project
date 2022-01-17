@@ -14,11 +14,18 @@ function getStockTableRowData(id) {
 
 function deleteStock(id) {
 
-    closeLoaderAndUpdateStocks = (loader) => {
+    onSuccessDeleteStock = loader => {
         setTimeout(() => {
-            loadUserStocks();
+            $("#stock_" + id).fadeOut(100, function () {
+                $("#stock_" + id).remove();
+            });
             loader.hide();
         }, 1000);
+    };
+
+    onErrorDeleteStock = err => {
+        console.log(err);
+        loader.hide();
     };
 
     const request = {
@@ -29,14 +36,11 @@ function deleteStock(id) {
     const loader = new bootstrap.Modal(document.getElementById('loaderModal'), { keyboard: false });
     loader.show();
     $.ajax({
-        type: 'POST',
+        type: 'DELETE',
         url: 'http://localhost:5000/stock/deleteUserStock',
         data: JSON.stringify(request),
-        success: closeLoaderAndUpdateStocks(loader),
-        error: err => {
-            console.log(err);
-            loader.hide()
-        },
+        success: onSuccessDeleteStock(loader),
+        error: onErrorDeleteStock,
         dataType: 'json',
         contentType: 'application/json'
     });
@@ -62,7 +66,8 @@ function doEditStock() {
             $('#priceQtyInvalidAlert').show();
             $('#stockValue').focus();
             return false;
-        } else if (values.qty < 0) {
+        }
+        if (values.qty < 0) {
             $('#priceQtyInvalidAlert').show();
             $('#stockQty').focus();
             return false;
@@ -70,12 +75,17 @@ function doEditStock() {
         return true;
     };
 
-    closeModalAndUpdateStocks = (loader) => {
+    onSuccessUpdateStock = loader => {
         setTimeout(() => {
             loadUserStocks();
             bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
             loader.hide();
         }, 1000);
+    };
+
+    onErrorUpdateStock = (err, loader) => {
+        console.log(err);
+        loader.hide()
     };
 
     if (validateStockData()) {
@@ -87,22 +97,17 @@ function doEditStock() {
         const loader = new bootstrap.Modal(document.getElementById('loaderModal'), { keyboard: false });
         loader.show();
         $.ajax({
-            type: 'POST',
+            type: 'PUT',
             url: 'http://localhost:5000/stock/updateUserStock',
             data: JSON.stringify(request),
-            success: closeModalAndUpdateStocks(loader),
-            error: err => {
-                console.log(err);
-                loader.hide()
-            },
+            success: onSuccessUpdateStock(loader),
+            error: err => onErrorUpdateStock(err, loader),
             dataType: 'json',
             contentType: 'application/json'
         });
     }
 
 }
-
-
 
 function editStock(id) {
     const modalDom = document.getElementById('editModal');
@@ -135,6 +140,7 @@ function loadUserStocks() {
                     + '<td>' + stock.name + '</td>'
                     + '<td>' + stock.price + '</td>'
                     + '<td>' + stock.qty + '</td>'
+                    + '<td>' + stock.qty * stock.price + '</td>'
                     + '<td><a href="#" onclick="editStock(' + stock.id + ')"/a>Editar</td>'
                     + '<td><a href="#" onclick="deleteStock(' + stock.id + ')"/a>Remover</td>'
                     + '</tr';
@@ -160,8 +166,13 @@ function loadUserStocks() {
 }
 
 $(document).ready(() => {
-    $('#emptyStocksAlert').hide();
-    $('#priceQtyInvalidAlert').hide();
+
+    hideAlerts = () => {
+        const alerts = ['#emptyStocksAlert', '#priceQtyInvalidAlert'];
+        alerts.forEach(alert => $(alert).hide());
+    };
+
+    hideAlerts();
     $('#userHello')[0].innerHTML = $('#userHello')[0].innerHTML.replace('%@USUARIO%@', sessionGet('userLogin').val.name);
     loadUserStocks();
 });

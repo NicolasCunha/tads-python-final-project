@@ -29,12 +29,11 @@ def createStock():
     return HttpUtils.createResponse(result)
 
 
-@app.route('/stock', methods=['get'])
+@app.route('/stock/', methods=['get'])
 def getStocks():
     stocks = StockService.getAllStocks()
 
     stocks_dict = [stock.to_json() for stock in stocks]
-
     return HttpUtils.createResponse(stocks_dict)
 
 
@@ -94,7 +93,25 @@ def findStocksYahooApi():
     return HttpUtils.createResponse(result)
 
 
-@app.route('/stock/updateUserStock', methods=['post'])
+@app.route('/stock/', methods=['put'])
+def updateStock():
+    request_data = request.get_json()
+
+    return HttpUtils.createResponse(
+        StockService.updateStock(request_data["id"], request_data["code"], request_data["name"], request_data["price"])
+    )
+
+
+@app.route('/stock/', methods=['delete'])
+def deleteStock():
+    request_data = request.get_json()
+
+    return HttpUtils.createResponse(
+        StockService.deleteStock(request_data["id"])
+    )
+
+
+@app.route('/stock/updateUserStock', methods=['put'])
 def updateUserStock():
     request_data = request.get_json()
 
@@ -102,7 +119,7 @@ def updateUserStock():
         StockService.updateUserStock(request_data["user"], request_data["stock"], request_data["qty"]))
 
 
-@app.route('/stock/deleteUserStock', methods=['post'])
+@app.route('/stock/deleteUserStock', methods=['delete'])
 def deleteUserStock():
     request_data = request.get_json()
 
