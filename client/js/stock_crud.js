@@ -1,9 +1,12 @@
 $(document).ready(() => {
-    hideAlerts = () => {
-        const alerts = ['#emptyStocksAlert', '#nameNotEmptyAlert', '#codeNotEmptyAlert', '#priceInvalidAlert', '#newStockCodeNotEmptyAlert', '#newStockNameNotEmptyAlert', '#newStockPriceInvalidAlert', '#newStockAutocompleteTooShortAlert'];
-        alerts.forEach(alert => $(alert).hide());
+    $('#formNewStock').submit(e => {
+        e.preventDefault();
+    });
+    hideComponents = () => {
+        const components = ['#emptyStocksAlert', '#nameNotEmptyAlert', '#codeNotEmptyAlert', '#priceInvalidAlert', '#newStockCodeNotEmptyAlert', '#newStockNameNotEmptyAlert', '#newStockPriceInvalidAlert', '#newStockAutocompleteTooShortAlert', '#loaderNewStock'];
+        components.forEach(component => $(component).hide());
     };
-    hideAlerts();
+    hideComponents();
     $('#userHello')[0].innerHTML = $('#userHello')[0].innerHTML.replace('%@USUARIO%@', sessionGet('userLogin').val.name);
     loadDatabaseStocks();
     $("#stockSearchDatalist").keydown(key => stockAutoComplete(key));
@@ -38,10 +41,23 @@ function createStock() {
     modal.show();
 }
 
+function autoCompleteOnBlur() {
+    console.log($('#stockSearchDatalist').val());
+}
+
 function stockAutoComplete(key) {
-    
+
     onSuccessAutoComplete = (data, loader) => {
-        console.log(data);
+        const result = data[0];
+        if (result.length == 0) {
+            console.log('Dados não encontrados');
+        } else {
+            $('#newStockListOptions').empty();
+            result.forEach(stock => {
+                const value = '<option value="' + stock.code + ' / ' + stock.name + ' / ' + stock.avgPrice + '">'
+                $('#newStockListOptions').append(value);
+            });
+        }
         loader.hide();
     };
 
@@ -49,7 +65,7 @@ function stockAutoComplete(key) {
         console.log(err);
         loader.hide();
     }
-    
+
     $('#newStockAutocompleteTooShortAlert').hide();
     if (key.which == 13) {
         const value = $('#stockSearchDatalist').val() || '';
@@ -59,16 +75,16 @@ function stockAutoComplete(key) {
             const request = {
                 'query': value.toLowerCase()
             };
-            const loader = new bootstrap.Modal(document.getElementById('loaderModal'), { keyboard: false });
+            const loader = $('#loaderNewStock');
             loader.show();
             $.ajax({
-                type : 'POST',
-                url : 'http://localhost:5000/stock/autocomplete',
-                data : JSON.stringify(request),
-                success : data => onSuccessAutoComplete(data, loader),
-                error : error => onErrorAutoComplete(error, loader),
-                dataType : 'json',
-                contentType : 'application/json'
+                type: 'POST',
+                url: 'http://localhost:5000/stock/autocomplete',
+                data: JSON.stringify(request),
+                success: data => onSuccessAutoComplete(data, loader),
+                error: error => onErrorAutoComplete(error, loader),
+                dataType: 'json',
+                contentType: 'application/json'
             });
         }
     }
