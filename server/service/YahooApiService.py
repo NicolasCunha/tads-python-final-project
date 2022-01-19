@@ -1,9 +1,9 @@
+import requests
+
 API_KEY = "1eIBElzG3x1Wlonm3H8ye36fapVBBjN81Im1dpoH"
 
 URL_AUTOCOMPLETE = "https://yfapi.net/v6/finance/autocomplete"
 URL_QUOTE = "https://yfapi.net/v6/finance/quote"
-
-import requests
 
 
 def autocomplete(query):
