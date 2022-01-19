@@ -2,12 +2,13 @@
 
 ### Avaliação final da matéria "Desenvolvimento de Sistemas em Python".
 
-Essa pasta contém os arquivos da camada de servidor (back-end) da aplicação, utilizando Flask e SQLAlchemy. 
+Essa pasta contém os arquivos da camada de servidor (back-end) da aplicação, utilizando Flask e SQLAlchemy.
 
-O projeto está estruturado da seguinte forma:
+Esta camada está estruturado da seguinte forma:
 
 - [Server.py](Server.py): arquivo responsável por inicializar o servidor do Flask e criar as tabelas do banco que ainda não foram criadas através do SQL Alchemy.
 - [Config.py](Config.py): arquivo que contém configurações do sistema, como porta do Flask e o diretório que o SQLAlchemy criará o arquivo do banco de dados.
+- [ServerTest.py](ServerTest.py) : arquivo que contém os testes dos modelos do projeto. Foi necessário criar esse arquivo separado devido a estrutura de módulos do projeto, aonde testes em cada classe de modelo resultaria em código reduntante para que o path do Python fosse atualizado com cada sub-módulo adicional.
 - [utils](utils): módulo que contém arquivos utilitários, como o arquivo [HttpUtils](utils/HttpUtils.py) utilizada em conter constantes e métodos para padronizar criação de respostas dos endpoints.
 - [model](model): módulo que contém classes mapeadas como Model do SQLAlchemy, representando o banco de dados.
 - [service](service) : módulo que contém arquivos responsáveis pela regra de negócio das rotas. Por exemplo, a classe [UserService](service/UserService.py) contém métodos que efetuam a lógica para autenticação e cadastro do usuário.
@@ -18,13 +19,16 @@ O projeto está estruturado da seguinte forma:
 - Usuário ([mapeamento de rota](endpoint/UserEndpoint.py), [regra de negócio](service/UserService.py), [modelo](model/User.py))
   - POST: Login
   - POST: Sign-Up
-
-#### Módulos pendentes:
-- Ação
-  - POST: Criação de ações
-  - DELETE: Remoção de ações
-  - PUT: Atualização de ações
-  - POST: Obtenção de ações (geral e por chave)
+- Ação: ([mapeamento de rota](endpoint/StockEndpoint.py), [regra de negócio](service/StockService.py), [modelo](model/Stock.py))
+  - GET : Obter todas ações
+  - POST: Criar ação
+  - PUT : Atualizar ação
+  - DELETE : Remover ação
+- Ação por usuário: ([mapeamento de rota](endpoint/StockEndpoint.py), [regra de negócio](service/StockService.py), [modelo](model/UserStock.py))
+  - GET : Obter ações de um usuário
+  - POST: Criar ação para um usuário
+  - PUT : Atualizar ação para um usuário
+  - DELETE : Remover ação de um usuário
 
 Para executar o lado do servidor do projeto, siga os passos abaixo:
 

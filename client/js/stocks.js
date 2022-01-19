@@ -1,3 +1,19 @@
+$(document).ready(() => {
+
+    hideAlerts = () => {
+        const alerts = ['#emptyStocksAlert', '#priceQtyInvalidAlert', '#emptyUserStocksAlert', '#stockQtyInvalidAlert', '#invalidStockSelectionAlert'];
+        alerts.forEach(alert => $(alert).hide());
+    };
+
+    hideAlerts();
+    $('#userHello')[0].innerHTML = $('#userHello')[0].innerHTML.replace('%@USUARIO%@', sessionGet('userLogin').val.name);
+    loadUserStocks();
+});
+
+$(document).on('click', '.btn-close', e => {
+    $(e.currentTarget.parentElement).hide();
+});
+
 // Common
 function getStockTableRowData(id) {
     const tr = document.getElementById('stock_' + id);
@@ -10,8 +26,104 @@ function getStockTableRowData(id) {
     }
 }
 
-// Crud - Delete
+// Crud - Create
+function createUserStock() {
+    loadSystemStocks = () => {
+        getSystemStocks().then(stocks => {
+            stocks[0].forEach(stock => {
+                const value = '<option value="' + stock.code + ' / ' + stock.name + ' / ' + stock.price + '">'
+                $('#newUserStockListOptions').append(value);
+            });
+        });
+    };
 
+    const modalDom = document.getElementById('newUserStockModal');
+    modalDom.addEventListener('shown.bs.modal', () => {
+        loadSystemStocks();
+    });
+    const modal = new bootstrap.Modal(modalDom);
+    modal.show();
+}
+
+function doCreateUserStock() {
+
+    validateCreateUserStockForm = () => {
+        $('#stockQtyInvalidAlert').hide();
+        $('#invalidStockSelectionAlert').hide();
+
+        const qty = $('#newUserStockQty').val() || -1;
+        const stock = $('#stockSearchDatalist').val();
+
+        if (!stock) {
+            $('#invalidStockSelectionAlert').show();
+            $('#stockSearchDatalist').focus();
+            return false;
+        }
+
+        if (qty < 0) {
+            $('#stockQtyInvalidAlert').show();
+            $('#newUserStockQty').focus();
+            return false;
+        }
+
+        return true;
+    };
+
+    if (validateCreateUserStockForm()) {
+
+        getStockByCode = code => {
+            return $.ajax({
+                type: 'GET',
+                url: 'http://localhost:5000/stock/code/' + code,
+                dataType: 'json',
+                contentType: 'application/json'
+            });
+        };
+
+        const stockSplit = $('#stockSearchDatalist').val().split('/');
+
+        getStockByCode(stockSplit[0].trim()).then(stock => {
+            if (stock && stock[0]) {
+
+                onSuccessCreateUserStock = loader => {
+                    setTimeout(() => {
+                        loadUserStocks();
+                        bootstrap.Modal.getInstance(document.getElementById('newUserStockModal')).hide();
+                        loader.hide();
+                    }, 1000);
+                };
+
+                onErrorCreateUserStock = (err, loader) => {
+                    console.log(err);
+                    loader.hide();
+                }
+
+                const request = {
+                    user: sessionGet('userLogin').val.id,
+                    stock: stock[0].id,
+                    qty: $('#newUserStockQty').val()
+                };
+                const loader = new bootstrap.Modal(document.getElementById('loaderModal'), { keyboard: false });
+                loader.show();
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:5000/stock/addStockToUser/',
+                    data: JSON.stringify(request),
+                    success: onSuccessCreateUserStock(loader),
+                    error: err => onErrorCreateUserStock(err, loader),
+                    dataType: 'json',
+                    contentType: 'application/json'
+                });
+            }
+        });
+
+
+    }
+
+
+}
+
+// Crud - Delete
 function deleteStock(id) {
 
     onSuccessDeleteStock = loader => {
@@ -19,6 +131,7 @@ function deleteStock(id) {
             $("#stock_" + id).fadeOut(100, function () {
                 $("#stock_" + id).remove();
             });
+            loadUserStocks();
             loader.hide();
         }, 1000);
     };
@@ -47,7 +160,6 @@ function deleteStock(id) {
 }
 
 // Crud - Update
-
 function doEditStock() {
 
     getModalStockValues = () => {
@@ -124,14 +236,22 @@ function editStock(id) {
 }
 
 // Crud - Read
+function getSystemStocks() {
+    return $.ajax({
+        type: 'GET',
+        url: 'http://localhost:5000/stock/',
+        dataType: 'json',
+        contentType: 'application/json'
+    });
+}
 
 function loadUserStocks() {
 
-    onSuccessLoadStocks = result => {
+    onSuccessLoadStocks = (result, loader) => {
         if (result[0].stocks.length == 0) {
-            $('#stocksTable').hide();
-            $('#emptyStocksAlert').show();
+            $('#emptyUserStocksAlert').show();
         } else {
+            $('#stocksTableParent').show();
             $('#stocksTable tr').remove();
             result[0].stocks.forEach(stock => {
                 const record = '<tr id="stock_' + stock.id + '">'
@@ -147,36 +267,35 @@ function loadUserStocks() {
                 $('#stocksTable').append(record);
             });
         }
+        loader.hide();
     };
 
-    onErrorLoadStocks = err => {
+    onErrorLoadStocks = (err, loader) => {
         console.log(err);
+        loader.hide();
     };
 
-    const user = sessionGet('userLogin').val.id;
-    const url = 'http://localhost:5000/stock/getUserStocks/' + user;
-    $.ajax({
-        type: 'GET',
-        url,
-        success: onSuccessLoadStocks,
-        error: onErrorLoadStocks,
-        dataType: 'json',
-        contentType: 'application/json'
+    const loader = new bootstrap.Modal(document.getElementById('loaderModal'), { keyboard: false });
+    loader.show();
+    getSystemStocks().then(result => {
+        $('#stocksTableParent').hide();
+        $('#emptyUserStocksAlert').hide();
+        if (result[0].length == 0) {
+            $('#emptyStocksAlert').show();
+            loader.hide();
+            return;
+        }
+        const user = sessionGet('userLogin').val.id;
+        const url = 'http://localhost:5000/stock/getUserStocks/' + user;
+        $.ajax({
+            type: 'GET',
+            url,
+            success: data => onSuccessLoadStocks(data, loader),
+            error: err => onErrorLoadStocks(err, loader),
+            dataType: 'json',
+            contentType: 'application/json'
+        });
     });
+
 }
 
-$(document).ready(() => {
-
-    hideAlerts = () => {
-        const alerts = ['#emptyStocksAlert', '#priceQtyInvalidAlert'];
-        alerts.forEach(alert => $(alert).hide());
-    };
-
-    hideAlerts();
-    $('#userHello')[0].innerHTML = $('#userHello')[0].innerHTML.replace('%@USUARIO%@', sessionGet('userLogin').val.name);
-    loadUserStocks();
-});
-
-$(document).on('click', '.btn-close', e => {
-    $(e.currentTarget.parentElement).hide();
-});

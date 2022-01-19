@@ -65,10 +65,13 @@ def getUserStocks(user_id):
 def getStockByCode(stock_code):
     stock = StockService.findStockByCode(stock_code)
 
+    if stock:
+        stock = stock.to_json()
+
     return HttpUtils.createResponse(stock)
 
 
-@app.route('/stock/addStockToUser', methods=['post'])
+@app.route('/stock/addStockToUser/', methods=['post'])
 def addStockToUser():
     request_data = request.get_json()
 

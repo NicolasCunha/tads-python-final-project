@@ -9,11 +9,11 @@ def findStockById(stockId):
 
 
 def findStockByCode(code):
-    return db.session.query(Stock).filter(Stock.code == code).all()
+    return db.session.query(Stock).filter(Stock.code == code).first()
 
 
 def existsStock(code):
-    return len(findStockByCode(code)) > 0
+    return findStockByCode(code)
 
 
 def getAllStocks():

@@ -131,6 +131,11 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                     </div>
                     <div class="modal-body">
+                        <div id="newStockNoStockFoundAlert" class="alert alert-warning alert-dismissible fade show"
+                            role="alert">
+                            Não foram encontradas ações relacionadas a busca. Tente novamente.
+                            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+                        </div>
                         <div id="newStockCodeNotEmptyAlert" class="alert alert-warning alert-dismissible fade show"
                             role="alert">
                             O código da ação não pode ser vazio.
@@ -187,7 +192,7 @@
             <div class="jumbotron jumbotron-fluid">
                 <div class="container">
                     <h1 id="userHello" class="display-6">Olá, %@USUARIO%@!</h1>
-                    <p class="lead">Abaixo estão as suas ações.</p>
+                    <p class="lead">Abaixo estão as ações cadastradas no sistema.</p>
                 </div>
             </div>
             <div id="emptyStocksAlert" class="alert alert-primary alert-dismissible fade show" role="alert">

@@ -3,7 +3,7 @@ $(document).ready(() => {
         e.preventDefault();
     });
     hideComponents = () => {
-        const components = ['#emptyStocksAlert', '#nameNotEmptyAlert', '#codeNotEmptyAlert', '#priceInvalidAlert', '#newStockCodeNotEmptyAlert', '#newStockNameNotEmptyAlert', '#newStockPriceInvalidAlert', '#newStockAutocompleteTooShortAlert', '#loaderNewStock'];
+        const components = ['#emptyStocksAlert', '#nameNotEmptyAlert', '#codeNotEmptyAlert', '#priceInvalidAlert', '#newStockCodeNotEmptyAlert', '#newStockNameNotEmptyAlert', '#newStockPriceInvalidAlert', '#newStockAutocompleteTooShortAlert', '#loaderNewStock', '#newStockNoStockFoundAlert'];
         components.forEach(component => $(component).hide());
     };
     hideComponents();
@@ -42,7 +42,14 @@ function createStock() {
 }
 
 function autoCompleteOnBlur() {
-    console.log($('#stockSearchDatalist').val());
+    const stock = $('#stockSearchDatalist').val();
+    const stockSplit = stock.split('/');
+    for (i = 0; i < stockSplit.length; i++) {
+        stockSplit[i] = stockSplit[i].trim()
+    }
+    $('#newStockCode').val(stockSplit[0]);
+    $('#newStockName').val(stockSplit[1]);
+    $('#newStockValue').val(stockSplit[2]);
 }
 
 function stockAutoComplete(key) {
@@ -50,7 +57,7 @@ function stockAutoComplete(key) {
     onSuccessAutoComplete = (data, loader) => {
         const result = data[0];
         if (result.length == 0) {
-            console.log('Dados não encontrados');
+            $('#newStockNoStockFoundAlert').show();
         } else {
             $('#newStockListOptions').empty();
             result.forEach(stock => {
@@ -66,6 +73,7 @@ function stockAutoComplete(key) {
         loader.hide();
     }
 
+    $('#newStockNoStockFoundAlert').hide();
     $('#newStockAutocompleteTooShortAlert').hide();
     if (key.which == 13) {
         const value = $('#stockSearchDatalist').val() || '';
@@ -89,6 +97,77 @@ function stockAutoComplete(key) {
         }
     }
 };
+
+function doCreateStock() {
+
+    getModalNewStockValues = () => {
+        return {
+            code: $('#newStockCode').val(),
+            name: $('#newStockName').val(),
+            value: $('#newStockValue').val() || -1
+        };
+    };
+
+    $('#newStockCodeNotEmptyAlert').hide();
+    $('#newStockNameNotEmptyAlert').hide();
+    $('#newStockPriceInvalidAlert').hide();
+
+    validateNewStockFields = () => {
+        const values = getModalNewStockValues();
+        if (!values.code) {
+            $('#newStockCodeNotEmptyAlert').show();
+            $('#newStockCode').focus();
+            return false;
+        }
+        if (!values.name) {
+            $('#newStockNameNotEmptyAlert').show();
+            $('#newStockName').focus();
+            return false;
+        }
+        if (values.value < 0) {
+            $('#newStockPriceInvalidAlert').show();
+            $('#newStockValue').focus();
+            return false;
+        }
+        return true;
+    };
+
+    onSuccessCreateStock = (loader) => {
+        setTimeout(() => {
+            loadDatabaseStocks();
+            bootstrap.Modal.getInstance(document.getElementById('newStockModal')).hide();
+            loader.hide();
+        }, 1000);
+    };
+
+    onErrorCreateStock = (err, loader) => {
+        console.log(err);
+        loader.hide();
+    }
+
+    if (validateNewStockFields()) {
+        const values = getModalNewStockValues();
+        const request = {
+            name : values.name,
+            code : values.code,
+            price : values.value
+        };
+
+        const loader = new bootstrap.Modal(document.getElementById('loaderModal'), { keyboard: false });
+        loader.show();
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:5000/stock/',
+            data: JSON.stringify(request),
+            success: onSuccessCreateStock(loader),
+            error: err => onErrorCreateStock(err, loader),
+            dataType: 'json',
+            contentType: 'application/json'
+        });
+
+    }
+
+}
 
 // Crud - Update
 function editStock(id) {
@@ -175,7 +254,6 @@ function doEditStock() {
 }
 
 // Crud - Delete
-
 function deleteStock(id) {
     console.log('Deleting stock ' + id);
 
@@ -212,7 +290,6 @@ function deleteStock(id) {
 }
 
 // Crud - Read
-
 function loadDatabaseStocks() {
 
     onSuccessLoadStocks = (data, loader) => {

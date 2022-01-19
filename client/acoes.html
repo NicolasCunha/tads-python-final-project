@@ -112,6 +112,41 @@
                 </div>
             </div>
         </div>
+        <div id="newUserStockModal" class="modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nova Ação</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="invalidStockSelectionAlert" class="alert alert-warning alert-dismissible fade show"
+                            role="alert">
+                            É necessário selecionar ao menos uma ação.
+                            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+                        </div>
+                        <div id="stockQtyInvalidAlert" class="alert alert-warning alert-dismissible fade show"
+                            role="alert">
+                            A quantidade da ação deve ser positivo.
+                            <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+                        </div>
+                        <form id="formNewUserStock">
+                            <label for="stockSearchDatalist">Busca de ações</label>
+                            <input class="form-control" list="newUserStockListOptions" id="stockSearchDatalist" placeholder="Bradesco">
+                            <datalist id="newUserStockListOptions"></datalist>
+                            <div class="form-group">
+                                <label for="newUserStockQty">Quantidade</label>
+                                <input type="number" class="form-control" id="newUserStockQty" placeholder="50">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" onclick="doCreateUserStock()">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="content">
             <div class="jumbotron jumbotron-fluid">
                 <div class="container">
@@ -119,8 +154,19 @@
                     <p class="lead">Abaixo estão as suas ações.</p>
                 </div>
             </div>
+            <div id="emptyStocksAlert" class="alert alert-primary alert-dismissible fade show" role="alert">
+                Não existem ações cadastradas no sistema. Para cadastrar uma nova ação, acesse a opção <a
+                    href="acoes_cadastro.html">cadastro de ações</a>.
+                <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+            </div>
+            <div id="emptyUserStocksAlert" class="alert alert-primary alert-dismissible fade show" role="alert">
+                Não existem ações para este usuário cadastradas no sistema. Para cadastrar uma nova ação, clique no
+                botão "Nova Ação".
+                <button id="closeAlertBtn" type="button" class="btn-close" aria-label="Fechar"></button>
+            </div>
             <div id="stocksDiv">
-                <table class="table">
+                <button type="button" class="btn btn-primary" onclick="createUserStock()">Nova Ação</button>
+                <table id="stocksTableParent" class="table">
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
