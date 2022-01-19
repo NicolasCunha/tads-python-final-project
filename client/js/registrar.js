@@ -1,3 +1,18 @@
+$(document).ready(() => {
+    closeAllAlerts();
+    $('#formSignup').submit(e => {
+        e.preventDefault();
+    });
+    $('#btnSignup').click(() => {
+        signup();
+    });
+
+});
+
+$(document).on('click', '.btn-close', e => {
+    $(e.currentTarget.parentElement).hide();
+});
+
 function closeAllAlerts() {
     const alertsToClose = ['#fieldInvalidAlert', '#fieldPwdNotMatchAlert', '#signupOkAlert', '#userExistsAlert'];
     alertsToClose.forEach(alert => {
@@ -67,19 +82,3 @@ function signup() {
         $('#fieldInvalidAlert').show();
     }
 }
-
-
-$(document).ready(() => {
-    closeAllAlerts();
-    $('#formSignup').submit(e => {
-        e.preventDefault();
-    });
-    $('#btnSignup').click(() => {
-        signup();
-    });
-
-});
-
-$(document).on('click', '.btn-close', e => {
-    $(e.currentTarget.parentElement).hide();
-});

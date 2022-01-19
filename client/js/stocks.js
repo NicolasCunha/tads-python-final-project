@@ -117,9 +117,7 @@ function doCreateUserStock() {
             }
         });
 
-
     }
-
 
 }
 
@@ -246,7 +244,6 @@ function getSystemStocks() {
 }
 
 function loadUserStocks() {
-
     onSuccessLoadStocks = (result, loader) => {
         if (result[0].stocks.length == 0) {
             $('#emptyUserStocksAlert').show();
@@ -296,6 +293,4 @@ function loadUserStocks() {
             contentType: 'application/json'
         });
     });
-
 }
-

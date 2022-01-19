@@ -1,3 +1,7 @@
+$(window).on('load', function () {
+    validateTabsVisibility();
+});
+
 function validateTabsVisibility() {
     const tabsHiddenWhenUserLoggedOut = ['#itemLogout', '#itemStocks', '#itemStocksRecords']
     const tabsHiddenWhenUserLoggedIn = ['#itemLogin', '#itemRegister'];
@@ -8,7 +12,4 @@ function validateTabsVisibility() {
     }
 };
 
-$(window).on('load', function () {
-    validateTabsVisibility();
-});
 

@@ -45,7 +45,6 @@ $(document).ready(() => {
     $('#btnLogin').click(event => {
         login();
     });
-
 });
 
 $(document).on('click', '.btn-close', e => {

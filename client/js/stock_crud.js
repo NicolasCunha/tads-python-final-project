@@ -53,7 +53,6 @@ function autoCompleteOnBlur() {
 }
 
 function stockAutoComplete(key) {
-
     onSuccessAutoComplete = (data, loader) => {
         const result = data[0];
         if (result.length == 0) {
@@ -99,7 +98,6 @@ function stockAutoComplete(key) {
 };
 
 function doCreateStock() {
-
     getModalNewStockValues = () => {
         return {
             code: $('#newStockCode').val(),
@@ -166,12 +164,10 @@ function doCreateStock() {
         });
 
     }
-
 }
 
 // Crud - Update
 function editStock(id) {
-
     getModalStockValues = () => {
         return {
             id: $("#stockId").val(),
@@ -194,7 +190,6 @@ function editStock(id) {
 }
 
 function doEditStock() {
-
     validateStockData = () => {
         const values = getModalStockValues();
         console.log(values);
@@ -255,8 +250,6 @@ function doEditStock() {
 
 // Crud - Delete
 function deleteStock(id) {
-    console.log('Deleting stock ' + id);
-
     onSuccessDeleteStock = loader => {
         setTimeout(() => {
             $("#stock_" + id).fadeOut(100, function () {
@@ -286,12 +279,10 @@ function deleteStock(id) {
         dataType: 'json',
         contentType: 'application/json'
     });
-
 }
 
 // Crud - Read
 function loadDatabaseStocks() {
-
     onSuccessLoadStocks = (data, loader) => {
         const stocks = data[0];
         const tableParent = $('#stocksTableParent');
